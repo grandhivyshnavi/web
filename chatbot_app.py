@@ -1,5 +1,6 @@
 # Import necessary libraries
 import streamlit as st
+import subprocess
 
 # Install NLTK
 import st.subprocess as subprocess
