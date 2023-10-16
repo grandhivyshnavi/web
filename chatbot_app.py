@@ -1,9 +1,5 @@
 # Import necessary libraries
 import streamlit as st
-import pandas as pd
-import numpy as np
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.naive_bayes import MultinomialNB
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
@@ -69,5 +65,4 @@ def main():
         sentiment = analyze_sentiment(user_text)
         st.write('Sentiment:', sentiment)
 
-if __name__ == '__main__':
-    main()
+if __name__ ==
