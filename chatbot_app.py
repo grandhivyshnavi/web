@@ -2,7 +2,6 @@
 import streamlit as st
 import subprocess
 
-# Install NLTK
 import st.subprocess as subprocess
 subprocess.call(["pip", "install", "nltk"])
 
