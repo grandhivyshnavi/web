@@ -1,5 +1,10 @@
 # Import necessary libraries
 import streamlit as st
+
+# Install NLTK
+import st.subprocess as subprocess
+subprocess.call(["pip", "install", "nltk"])
+
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
