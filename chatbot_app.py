@@ -65,4 +65,5 @@ def main():
         sentiment = analyze_sentiment(user_text)
         st.write('Sentiment:', sentiment)
 
-if __name__ ==
+if __name__ == '__main__':
+    main()
