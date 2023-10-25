@@ -1,74 +1,55 @@
-# Import necessary libraries
+import openai
 import streamlit as st
-import subprocess
+from textblob import TextBlob
 
-import st.subprocess as subprocess
-subprocess.call(["pip", "install", "nltk"])
+# OpenAI API Key
+api_key = "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"
 
-import nltk
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
+def ask_gpt3(question, conversation=[]):
+    conversation.append({"role": "user", "content": question})
 
-# Download NLTK resources
-nltk.download('vader_lexicon')
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=conversation,
+        api_key=api_key
+    )
 
-# Load the sentiment analysis model
-sid = SentimentIntensityAnalyzer()
+    assistant_reply = response['choices'][0]['message']['content']
+    return assistant_reply
 
-# Function to perform sentiment analysis
-def analyze_sentiment(text):
-    sentiment_score = sid.polarity_scores(text)
-    if sentiment_score['compound'] >= 0.05:
-        return 'Positive'
-    elif sentiment_score['compound'] <= -0.05:
-        return 'Negative'
+def perform_sentiment_analysis(user_input):
+    # Create a TextBlob object
+    analysis = TextBlob(user_input)
+    
+    # Get the polarity score of the input text
+    sentiment_polarity = analysis.sentiment.polarity
+    
+    # Set a threshold for neutrality
+    neutral_threshold = 1.0
+    
+    # Classify the sentiment based on the polarity score and neutrality threshold
+    if sentiment_polarity > neutral_threshold:
+        return "Positive"
+    elif sentiment_polarity < -neutral_threshold:
+        return "Negative"
     else:
-        return 'Neutral'
+        return "Neutral"
 
-# Function to build and train the chatbot
-def build_chatbot():
-    responses = {
-        'greeting': 'Hello! How can I assist you today?',
-        'goodbye': 'Goodbye! Have a great day!',
-        'default': 'I am sorry, but I am not sure how to respond to that.'
-    }
-    return responses
-
-# Function to get chatbot response
-def get_chatbot_response(user_input, chatbot):
-    # Simple rule-based chatbot
-    if user_input.lower() in ['hi', 'hello', 'hey']:
-        return chatbot['greeting']
-    elif user_input.lower() in ['bye', 'goodbye']:
-        return chatbot['goodbye']
-    else:
-        return chatbot['default']
-
-# Streamlit web app
 def main():
-    # Set page title and icon
-    st.set_page_config(page_title='Amazon Chatbot', page_icon=':robot_face:')
+    st.title("Sentiment Analysis, Chatbot, and Bank Authenticator")
+    st.sidebar.header("Chatbot")
 
-    # Set app title
-    st.title('Amazon Chatbot')
+    # User input for sentiment analysis
+    user_input = st.text_area("Enter a text for sentiment analysis:")
+    if st.button("Analyze Sentiment"):
+        sentiment_result = perform_sentiment_analysis(user_input)
+        st.write(f"Sentiment: {sentiment_result}")
 
-    # User input for chatbot
-    user_input = st.text_input('You:')
+    # Chatbot interaction
+    user_question = st.text_input("Chatbot: Ask a question")
+    if st.button("Ask GPT-3"):
+        assistant_reply = ask_gpt3(user_question)
+        st.write(f"Chatbot: {assistant_reply}")
 
-    # Build the chatbot
-    chatbot = build_chatbot()
-
-    # Get chatbot response
-    chatbot_response = get_chatbot_response(user_input, chatbot)
-
-    # Display chatbot response
-    st.text_area('Chatbot:', value=chatbot_response, height=100)
-
-    # Sentiment analysis
-    st.header('Sentiment Analysis')
-    user_text = st.text_input('Enter text for sentiment analysis:')
-    if user_text:
-        sentiment = analyze_sentiment(user_text)
-        st.write('Sentiment:', sentiment)
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
