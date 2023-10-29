@@ -3,7 +3,7 @@ import streamlit as st
 from textblob import TextBlob
 
 # OpenAI API Key
-api_key = "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"
+api_key = "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"
 
 def ask_gpt3(question, conversation=[]):
     conversation.append({"role": "user", "content": question})
@@ -24,19 +24,15 @@ def perform_sentiment_analysis(user_input):
     # Get the polarity score of the input text
     sentiment_polarity = analysis.sentiment.polarity
     
-    # Set a threshold for neutrality
-    neutral_threshold = 1.0
-    
-    # Classify the sentiment based on the polarity score and neutrality threshold
-    if sentiment_polarity > neutral_threshold:
+    if sentiment_polarity > 0:
         return "Positive"
-    elif sentiment_polarity < -neutral_threshold:
+    elif sentiment_polarity < 0:
         return "Negative"
     else:
         return "Neutral"
 
 def main():
-    st.title("Sentiment Analysis, Chatbot, and Bank Authenticator")
+    st.title("Sentiment Analysis, Chatbot")
     st.sidebar.header("Chatbot")
 
     # User input for sentiment analysis
